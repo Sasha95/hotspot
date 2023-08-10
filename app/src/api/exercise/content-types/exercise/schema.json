@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exercises",
+  "info": {
+    "singularName": "exercise",
+    "pluralName": "exercises",
+    "displayName": "Exercise",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "task": {
+      "type": "richtext",
+      "required": true
+    },
+    "source": {
+      "type": "string",
+      "default": "null"
+    },
+    "complexity": {
+      "type": "enumeration",
+      "enum": [
+        "easy",
+        "medium",
+        "difficult"
+      ],
+      "required": true
+    },
+    "answers": {
+      "type": "json",
+      "required": true
+    },
+    "correct_answer": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
