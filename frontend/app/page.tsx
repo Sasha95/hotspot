@@ -1,6 +1,11 @@
+import { sshCommand } from "./api/ssh/action";
 import { Card } from "./components/card/Card";
 
 export default async function Home() {
+  const sendSSHCommand = async () => {
+    "use server";
+    sshCommand("echo", ["$PATH"]);
+  };
   return (
     <main className="flex min-h-screen flex-col items-center p-2">
       <h1 className="text-4xl font-bold my-4">IQMesh</h1>
@@ -23,6 +28,9 @@ export default async function Home() {
           link="/question?complexity=difficult"
         />
       </div>
+      <form action={sendSSHCommand}>
+        <button type="submit">click</button>
+      </form>
     </main>
   );
 }
