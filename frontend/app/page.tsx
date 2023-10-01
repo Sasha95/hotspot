@@ -1,10 +1,10 @@
-import { sshCommand } from "./api/ssh/action";
+import { insertData } from "./api/server/action";
 import { Card } from "./components/card/Card";
 
 export default async function Home() {
   const sendSSHCommand = async () => {
     "use server";
-    sshCommand("echo", ["$PATH"]);
+    insertData();
   };
   return (
     <main className="flex min-h-screen flex-col items-center p-2">

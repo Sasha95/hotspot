@@ -52,7 +52,67 @@ services:
     networks:
       - strapi
 
+  freeradius:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freeradius
+    ports:
+      - "1812-1813:1812-1813/udp"
+    restart: always
+    environment:
+      #- DB_NAME=radius
+      - DB_HOST=mysql
+      - DB_USER=radius
+      - DB_PASS=123
+      - DB_PORT=3306
+      #- RADIUS_KEY=testing123
+      #- RAD_CLIENTS=10.0.0.0/24
+      - RAD_DEBUG=yes
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    networks:
+      - radius
+  
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+  
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_DATABASE: radius
+      MYSQL_USER: radius
+      MYSQL_PASSWORD: your_database_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./php/mysql_data:/var/lib/mysql
+      - ./radius.sql:/docker-entrypoint-initdb.d/radius.sql
+    networks:
+      - radius
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - radius
+
 networks:
   strapi:
+  radius:
+    ipam:
+      config:
+        - subnet: 10.0.0.3/24
 volumes:
   db:
+  mysql_data:
