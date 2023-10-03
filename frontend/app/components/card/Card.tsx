@@ -8,7 +8,7 @@ type Props = {
   onClick: () => void;
 };
 
-export const Card = async ({ title, description, link, onClick }: Props) => {
+export const Card = ({ title, description, link, onClick }: Props) => {
   return (
     <div onClick={onClick} className="max-w-sm p-6 flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div>

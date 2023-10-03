@@ -5,8 +5,8 @@ import { getCookie } from "cookies-next";
 export default function Congratulations() {
   const macData = getCookie("mac");
 
-  return (
-    <div className="text-center h-screen flex flex-col align-middle justify-center">
+ return (
+    <div className="px-4 max-w-3xl py-10 min-h-[400px] text-center flex flex-col align-middle justify-center">
       <p className="text-2xl">
         Все правильно, теперь вы можете получить доступ в интернет!
       </p>
@@ -28,7 +28,7 @@ export default function Congratulations() {
             type="submit"
             className="bg-green-400 hover:bg-blue-700 text-white font-bold py-4 px-8 mt-4 rounded-full"
           >
-            Войти
+            Подключиться
           </button>
         </form>
       </div>

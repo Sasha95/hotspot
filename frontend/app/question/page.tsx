@@ -7,7 +7,7 @@ import "katex/dist/katex.min.css";
 import { checkAnswer, getQuestion } from "../api/question/action";
 import { useRouter } from "next/navigation";
 import { Answers } from "./Answers";
-import {getCookie} from "cookies-next"
+import { getCookie } from "cookies-next";
 
 export type Complexity = "easy" | "medium" | "difficult";
 
@@ -33,7 +33,7 @@ export default function Question({
   const router = useRouter();
   const [question, setQuestion] = useState<Data>();
   const [selected, setSelected] = useState<string>();
-  
+
   const query = qs.stringify(
     {
       filters: {
@@ -48,27 +48,26 @@ export default function Question({
   );
 
   useEffect(() => {
-    (async () => {
-      const res = await getQuestion(query);     
+    getQuestion(query).then((res) => {
       if (res) {
         setQuestion(res);
       }
-    })();
+    });
   }, [query]);
 
   const onCheck = async () => {
-    const macData = getCookie("mac")
-    const hour = getCookie("hour")
+    const macData = getCookie("mac");
+    const hour = getCookie("hour");
     if (selected && question && macData) {
       const data = await checkAnswer(question.id, selected);
-      if (data) {       
+      if (data) {
         const form = new FormData();
         form.append("mac", macData);
         form.append("hour", hour?.toString() ?? "1");
-        await fetch('/api/server', {
-          method: 'POST',
-          body: form
-        })
+        await fetch("/api/server", {
+          method: "POST",
+          body: form,
+        });
 
         router.push("/congratulations");
       } else {
@@ -80,14 +79,24 @@ export default function Question({
   const onChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
     setSelected(e.currentTarget.value);
   };
+  const [state, setState] = useState({
+    
+  })
+  useEffect(() => {
+    setTimeout(() => {
+        setState({
+          
+        })
+    }, 3000)
+  }, [])
 
   return (
-    <div className="px-4 max-w-3xl py-10 m-auto text-center min-h-screen flex flex-col align-middle justify-center">
+    <div className="px-4 max-w-3xl py-10 m-auto text-center flex flex-col align-middle justify-center">
       {question && (
         <>
-          <span className="text-2xl">
-            <Latex>{question.attributes.task}</Latex>
-          </span>
+        <div className="text-2xl">
+          <Latex>{question.attributes.task}</Latex>
+        </div>
           <Answers answers={question.attributes.answers} onChange={onChange} />
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 mt-4 rounded-full"

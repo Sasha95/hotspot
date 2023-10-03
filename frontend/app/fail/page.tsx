@@ -5,7 +5,7 @@ export default function Fail() {
   const macData = getCookie("mac");
 
   return (
-    <div className="text-center h-screen flex flex-col align-middle justify-center">
+    <div className="text-center min-h-[400px] flex flex-col align-middle justify-center">
       <p className="text-xl">К сожалению, вы ответили неправильно</p>
       <Link href={{ pathname: "/", query: { mac: macData } }}>
         <button
