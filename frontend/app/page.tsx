@@ -23,18 +23,21 @@ export default function Home() {
           title="Вопрос из самой простой категории"
           description="Не спешите выбирать данную категорию. Вы, скорее всего, ответите правильно, но доступ в интернет вы получите всего на 1 час."
           link="/question?complexity=easy"
+          onClick={()=> setCookie("hour", "1")}
         />
 
         <Card
           title="Вопрос из средней категории сложности"
           description="Отличный выбор, чтоб получить доступ в интернет на 4 часа и проверить свои знания."
           link="/question?complexity=medium"
+          onClick={()=> setCookie("hour", "4")}
         />
 
         <Card
           title="Вопрос из сложной категории"
           description="Если вы настойщий физик/математик, выбирайте эту категорию. Если вы правильно ответите, получите доступ в интернет на 1 день."
           link="/question?complexity=difficult"
+          onClick={()=> setCookie("hour", "24")}
         />
       </div>
     </main>

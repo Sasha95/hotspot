@@ -49,7 +49,7 @@ export default function Question({
 
   useEffect(() => {
     (async () => {
-      const res = await getQuestion(query);
+      const res = await getQuestion(query);     
       if (res) {
         setQuestion(res);
       }
@@ -58,12 +58,13 @@ export default function Question({
 
   const onCheck = async () => {
     const macData = getCookie("mac")
+    const hour = getCookie("hour")
     if (selected && question && macData) {
       const data = await checkAnswer(question.id, selected);
-      if (data) {
+      if (data) {       
         const form = new FormData();
         form.append("mac", macData);
-        form.append("hour", "1");
+        form.append("hour", hour?.toString() ?? "1");
         await fetch('/api/server', {
           method: 'POST',
           body: form

@@ -1,16 +1,16 @@
-import { cookies, headers } from "next/headers";
+'use client';
 import Link from "next/link";
-import queryString from "query-string";
 
 type Props = {
   title: string;
   description: string;
   link: string;
+  onClick: () => void;
 };
 
-export const Card = async ({ title, description, link }: Props) => {
+export const Card = async ({ title, description, link, onClick }: Props) => {
   return (
-    <div className="max-w-sm p-6 flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div onClick={onClick} className="max-w-sm p-6 flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div>
         <Link href={link}>
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
