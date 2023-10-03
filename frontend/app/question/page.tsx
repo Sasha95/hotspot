@@ -6,6 +6,8 @@ import Latex from "react-latex-next";
 import "katex/dist/katex.min.css";
 import { checkAnswer, getQuestion } from "../api/question/action";
 import { useRouter } from "next/navigation";
+import { Answers } from "./Answers";
+import {getCookie} from "cookies-next"
 
 export type Complexity = "easy" | "medium" | "difficult";
 
@@ -31,6 +33,7 @@ export default function Question({
   const router = useRouter();
   const [question, setQuestion] = useState<Data>();
   const [selected, setSelected] = useState<string>();
+  
   const query = qs.stringify(
     {
       filters: {
@@ -54,9 +57,18 @@ export default function Question({
   }, [query]);
 
   const onCheck = async () => {
-    if (selected && question) {
+    const macData = getCookie("mac")
+    if (selected && question && macData) {
       const data = await checkAnswer(question.id, selected);
       if (data) {
+        const form = new FormData();
+        form.append("mac", macData);
+        form.append("hour", "1");
+        await fetch('/api/server', {
+          method: 'POST',
+          body: form
+        })
+
         router.push("/congratulations");
       } else {
         router.push("/fail");
@@ -75,21 +87,7 @@ export default function Question({
           <span className="text-2xl">
             <Latex>{question.attributes.task}</Latex>
           </span>
-          {Object.entries(question.attributes.answers).map(
-            ([_, value], index) => (
-              <div className="mb-[0.125rem] block min-h-[1.5rem]" key={index}>
-                <label className="flex bg-gray-100 text-gray-700 rounded-md px-3 py-2 my-2  hover:bg-indigo-300 cursor-pointer ">
-                  <input
-                    type="radio"
-                    name="Text"
-                    value={value}
-                    onChange={onChange}
-                  />
-                  <i className="pl-2 text-xl">{value}</i>
-                </label>
-              </div>
-            )
-          )}
+          <Answers answers={question.attributes.answers} onChange={onChange} />
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 mt-4 rounded-full"
             onClick={onCheck}

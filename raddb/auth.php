@@ -6,9 +6,9 @@
 	if (!isset($argv[1]) || !isset($argv[2]) || !isset($argv[3]) || !isset($argv[4]))
 		exit();
     $type = trim($argv[1]);
-    $callingStationID = trim($argv[2]);
-	$username = trim($argv[3]);
-	$password = trim($argv[4]);
+    $callingStationID = mb_strtolower(trim($argv[2]));
+	$username = mb_strtolower(trim($argv[3]));
+	$password = mb_strtolower(trim($argv[4]));
 	//
 	try {
 		$mysqli = new mysqli("mysql", "radius", "123", "radius");

@@ -1,4 +1,6 @@
 import mysql from 'serverless-mysql';
+// import dotenv from "dotenv";
+// dotenv.config({ path: "../../../.env" });
 
 type RowData = {
     id: number;
@@ -18,7 +20,7 @@ const db = mysql({
     }
   });
 
-  export default async function executeQuery({ query, values }: { query: string, values?: any[] }) {
+  export default async function executeQuery({ query, values }: { query: string, values?: any[] }) {   
     try {
       const results = await db.query<RowData[]>(query, values);
       await db.end();
