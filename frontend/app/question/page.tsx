@@ -82,7 +82,7 @@ export default function Question({
   };
 
   return (
-    <div className="px-10 max-w-3xl m-auto text-center h-screen flex flex-col align-middle justify-center">
+    <div className="px-4 max-w-3xl py-10 m-auto text-center min-h-screen flex flex-col align-middle justify-center">
       {question && (
         <>
           <span className="text-2xl">
