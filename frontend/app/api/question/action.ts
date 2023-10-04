@@ -41,9 +41,11 @@ export async function getQuestion(query: string) {
 
 export async function checkAnswer(id: number, answer: string) {
   const data = await fetch(`${API_URL}/api/exercises/${id}`, {
+    cache: "no-cache",
     headers: {
       authorization: `Bearer ${API_TOKEN}`,
     },
+
   });
 
   const jsonData = (await data.json()) as {
@@ -53,5 +55,5 @@ export async function checkAnswer(id: number, answer: string) {
     };
   };
 
-  return jsonData.data.attributes.correct_answer === answer;
+  return jsonData.data.attributes.correct_answer == JSON.parse(jsonData.data.attributes.answers).findIndex((el: any) => el.toString() == answer);
 }

@@ -29,13 +29,12 @@
       ],
       "required": true
     },
-    "answers": {
-      "type": "json",
-      "required": true
-    },
     "correct_answer": {
       "type": "string",
       "required": true
+    },
+    "answers": {
+      "type": "richtext"
     }
   }
 }

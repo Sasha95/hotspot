@@ -16,8 +16,8 @@ export type Question = {
   task: string;
   source: string | null;
   complexity: Complexity;
-  answers: Record<string, string>;
-  correct_answer: string;
+  answers: string;
+  correct_answer: number;
 };
 
 export type Data = {
@@ -49,6 +49,7 @@ export default function Question({
 
   useEffect(() => {
     getQuestion(query).then((res) => {
+      
       if (res) {
         setQuestion(res);
       }
@@ -88,7 +89,7 @@ export default function Question({
           
         })
     }, 3000)
-  }, [])
+  }, [])  
 
   return (
     <div className="px-4 max-w-3xl py-10 m-auto text-center flex flex-col align-middle justify-center">
@@ -97,7 +98,7 @@ export default function Question({
         <div className="text-2xl">
           <Latex>{question.attributes.task}</Latex>
         </div>
-          <Answers answers={question.attributes.answers} onChange={onChange} />
+          <Answers answers={JSON.parse(question.attributes.answers)} onChange={onChange} />
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 mt-4 rounded-full"
             onClick={onCheck}
