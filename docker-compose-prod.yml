@@ -1,0 +1,119 @@
+version: "3"
+
+services:
+  fronted:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.prod
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      API_TOKEN: ${API_TOKEN}
+      API_URL: ${API_URL}
+      MYSQL_DATABASE_HOST: ${MYSQL_DATABASE_HOST}
+      MYSQL_DATABASE_PORT: ${MYSQL_DATABASE_PORT}
+      MYSQL_DATABASE_NAME: ${MYSQL_DATABASE_NAME}
+      MYSQL_DATABASE_USERNAME: ${MYSQL_DATABASE_USERNAME}
+      MYSQL_DATABASE_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+    networks:
+      - radius
+
+  cms:
+    image: dunadigital/strapi
+    environment:
+      NODE_ENV: production
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_HOST: db
+      DATABASE_CLIENT: postgres
+      DATABASE_PORT: 5432
+      DATABASE_SSL: "false"
+    ports:
+      - 1337:1337
+    volumes:
+      - ./app:/srv/app
+    depends_on:
+      - db
+    networks:
+      - radius
+
+  db:
+    container_name: postgres
+    image: postgres:14.2
+    restart: always
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_DB: ${DATABASE_NAME}
+    networks:
+      - radius
+
+  freeradius:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freeradius
+    ports:
+      - "1812-1813:1812-1813/udp"
+    restart: always
+    environment:
+      #- DB_NAME=radius
+      - DB_HOST=mysql
+      - DB_USER=radius
+      - DB_PASS=123
+      - DB_PORT=3306
+      #- RADIUS_KEY=testing123
+      #- RAD_CLIENTS=10.0.0.0/24
+      - RAD_DEBUG=no
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    networks:
+      - radius
+  
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}
+      MYSQL_USER: ${MYSQL_DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./php/mysql_data:/var/lib/mysql
+      - ./radius.sql:/docker-entrypoint-initdb.d/radius.sql
+    networks:
+      - radius
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: ${MYSQL_DATABASE_HOST}
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - radius
+
+networks:
+  radius:
+    ipam:
+      config:
+        - subnet: 10.0.0.3/24
+volumes:
+  db:
+  mysql_data:

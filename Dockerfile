@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:22.04
 FROM freeradius/freeradius-server:latest
 
 RUN apt update \
